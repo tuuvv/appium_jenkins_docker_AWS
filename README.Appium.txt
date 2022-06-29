@@ -127,6 +127,38 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.15.jdk/Contents/Home
 b11: start appium -> Edit configurations-> điền javahome và androidhome
 b12:pycharm project chọn lại thư mục python3 tại  system intepreter
 
+
+-----------Docker tại localhost---------------
+b1: touch Dockerfile
+FROM python:3.8.8
+
+RUN mkdir /appium
+
+COPY ./ /appium
+
+COPY ./requirements.txt /appium
+
+WORKDIR /appium
+RUN pip install pip --upgrade &&  pip install -r requirements.txt
+
+------------------------------
+[Appium-Python-Client
+pytest
+pytest_bdd==5.0.0
+requests
+allure-pytest
+]
+--------------------------------
+b2: pip freeze lấy list cho vào setup.py
+b3: docker build -t ten_images .
+b4: docker images
+b5:  docker run -d -p 8000:8000 -p 50000:50000 ten_iamges
+b6: docker ps -a
+docker run -it ten_iamges /bin/bash
+b7: cd tests
+b8:pytest --junitxml=allure_result_folder/unittests.xml  test_crollview.py
+
+b7:remove images: docker builder prune
 -----------------------------AWS------------------------------------
 EC2
 b1: tải first_linux tạo bước tạo key
@@ -162,34 +194,97 @@ b2: sudo yum update
 b3: sudo yum install git
 b4: git --version
 b5: which git
------------Docker---------------
-b1: touch Dockerfile
-FROM python:3.8.8
-
-RUN mkdir /appium
-
-COPY ./ /appium
-
-COPY ./requirements.txt /appium
-
-WORKDIR /appium
-RUN pip install pip --upgrade &&  pip install -r requirements.txt
-
-[Appium-Python-Client
-pytest
-pytest_bdd==5.0.0
-requests
-allure-pytest
-]
-
-b2: pip freeze lấy list cho vào setup.py
-b3: docker build -t ten_images .
-b4: docker images
-b5:  docker run -d -p 8000:8000 -p 50000:50000 ten_iamges
-b6: docker ps -a
-docker run -it ten_iamges /bin/bash
-
-
-b7:remove images docker builder prune
 ---------------GIT-----------------------
-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 github
+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 github khóa 90 ngày vuvantuu@gmail.com
+
+--------------Pipepile-----------------
+tại dự án jenkinsfileCloneRepo -> chọn Pipeline Syntax
+A> clone code vào AWS
+b1: sample Step chọn git:GIT
+b2: dán Repository URL chọn main, chọn xác thực
+b3: generate được git branch: 'main', credentialsId: '20021991', url: 'https://github.com/tuuvv/appium_jenkins_docker_AWS'
+b4: tại pipeline dán code :
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+         stage('CloneRepo') {
+            steps {
+                echo 'Hello World'
+                git branch: 'main', credentialsId: '20021991', url: 'https://github.com/tuuvv/appium_jenkins_docker_AWS'
+            }
+        }
+    }
+}
+B>Cài docker lên EC2
+b1: kết nối EC2 bằng ssh
+b2: sudo yum update -y ->  sudo amazon-linux-extras install docker
+b3: sudo groupadd docker
+b4: sudo usermod -aG docker $USER
+b5: Ctrl +C, -> exit
+b6: kết nối Lại bằng ssh
+b7: sudo service docker start
+b8: cd /var/lib/jenkins/workspace/
+b9: cd jenkinsfileCloneRepo
+b10: -> b7 ->chạy lại như dưới local
+C>chạy trên jenkins
+b1: tạo project chọn pipeline
+b2:
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                 git branch: 'main', credentialsId: '111222333', url: 'https://github.com/tuuvv/appium_jenkins_docker_AWS'
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('/var/lib/jenkins/workspace/jenkinsfileCloneRepo'){
+                sh 'docker build -t aws_docker .'
+                sh 'docker run -it aws_docker /bin/bash'
+                sh 'cd tests'
+                sh 'ls -l'
+                sh 'pytest --junitxml=allure_result_folder/unittests.xml test_crollview.py'
+                }
+            }
+        }
+        stage('Product') {
+            steps {
+                echo 'waiting for QA'
+            }
+        }
+    }
+}
+b3: sudo usermod -aG docker jenkins
+sudo service jenkins restart
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                 git branch: 'main', credentialsId: '111222333', url: 'https://github.com/tuuvv/appium_jenkins_docker_AWS'
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('/var/lib/jenkins/workspace/test_ok'){
+                sh 'docker build -t aws_docker .'
+                sh 'docker run -t --rm -v "$(pwd)":/appium/tests aws_docker -projectPath=/usr -retry=0 -pytest --junitxml=allure_result_folder/unittests.xml test_crollview.py'
+                }
+            }
+        }
+        stage('Product') {
+            steps {
+                echo 'waiting for QA'
+            }
+        }
+    }
+}
