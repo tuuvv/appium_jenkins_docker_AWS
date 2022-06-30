@@ -276,9 +276,9 @@ pipeline {
         }
         stage('Test') {
             steps {
-                dir('/var/lib/jenkins/workspace/test_ok'){
-                sh 'docker build -t aws_docker .'
-                sh 'docker run -t --rm -v "$(pwd)":/appium/tests aws_docker -projectPath=/usr -retry=0 -pytest --junitxml=allure_result_folder/unittests.xml test_crollview.py'
+                dir('/var/lib/jenkins/workspace/run_by_hand/tests'){
+                sh 'pip3 install -r requirements.txt'
+                sh 'python3 -m pytest --junitxml=allure_result_folder/unittests.xml test_crollview.py'
                 }
             }
         }
