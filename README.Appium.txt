@@ -289,3 +289,16 @@ pipeline {
         }
     }
 }
+------------------Allure ------------------------
+----install Nonejs
+b1: curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+b2: sudo yum install -y nodejs
+b3: mkdir allure
+cd allure
+wget https://github.com/allure-framework/allure2/releases/download/2.13.8/allure-2.13.8.zip
+
+sudo apt install unzip -y
+unzip allure-2.13.8.zip
+b4:sudo su -
+b5: npm install -g allure-commandline --save-dev
+b6:
