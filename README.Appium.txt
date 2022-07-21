@@ -197,7 +197,7 @@ b4: git --version
 b5: which git
 ---------------GIT-----------------------
 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 github khóa 90 ngày vuvantuu@gmail.com
-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 tuuvv
+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 tuuvv
 
 --------------Pipepile-----------------
 tại dự án jenkinsfileCloneRepo -> chọn Pipeline Syntax
