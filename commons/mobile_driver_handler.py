@@ -12,14 +12,14 @@ class MobileDriverHandle():
 
     def __init__(self):
         # sauce_url = "http://127.0.0.1:4723/wd/hub"
-        sauce_url = 'https://rainthe_0K23fG:MzukUonFP1FYpDqBq5Nz@hub-cloud.browserstack.com/wd/hub'
+        sauce_url = 'https://qateam_4mOEUA:NzsduYY6QU5YqCYvFT96@hub-cloud.browserstack.com/wd/hub'
         desired_caps = {
             'autoGrantPermissions': True,
             'platformName': 'Android',
             'platformVersion': '11',
             'deviceName': 'R58R332YAYL',
             'deviceOrientation': 'portrait',
-            'app': 'C:\\Users\\vuvan\\OneDrive\\Documents\\apium\\demotest\\source\\Android_Demo_App.apk',
+            'app': 'C:\\Users\\vuvan\\OneDrive\\Documents\\QA_PW_TUU\\appium_jenkins_docker_AWS-main\\source\\Android_Demo_App.apk',
             'appPackage': 'com.code2lead.kwad',
             'appActivity': 'com.code2lead.kwad.MainActivity',
             'appWaitActivity': 'com.code2lead.kwad.MainActivity',
@@ -31,7 +31,7 @@ class MobileDriverHandle():
             "platformName": "android",
             "platformVersion": "9.0",
             "deviceName": "Google Pixel 3",
-            "app": "bs://af7a1f74c963e99761362e9374b1bed3b749d4bd",
+            "app": "bs://8b26585442dee3c22be4cfefc3d5b31412e1ddfe",
             'bstack:options': {
                 "projectName": "test ok hay ko",
                 "appiumVersion": "1.18.0",
